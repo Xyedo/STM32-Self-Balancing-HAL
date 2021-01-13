@@ -1,0 +1,44 @@
+#include "pid_controller.h"
+
+#define CONSTRAIN(x,lower,upper)    ((x)<(lower)?(lower):((x)>(upper)?(upper):(x)))
+
+
+void PIDInit(double* Input, double* Output, double* Setpoint,
+        double Kp, double Ki, double Kd, int ControllerDirection) 
+{
+	SetOutputLimits(pid, 0,255);
+	
+	SampleTime = 100;
+	SetControllerDirection(pid, ControllerDirection);
+	SetTunings(pid, Kp,Ki,Kd);
+	
+	lastTime =Get_ms_tick()-SampleTime;
+	inAuto = false;
+	Output= pid->Output;
+	Input= pid->Input;
+	Setpoint = pid->Setpoint;
+	Iterm = Output;
+	lastInput = Input;
+	if (ITerm > outMax) Iterm = outMax;
+	else if (ITerm < outMin) Iterm = outMin;
+        
+}
+
+void PIDCompute() 
+{
+	if(!inAuto) return;
+	uint32_t now= Get_ms_tick();
+	uint32_t timeChange = (now - lastTime);	
+	if (timechange>=SampleTime) 
+	{
+		double input = pid->Input;
+		double error = pid->setPoint- input;
+		ITerm += (pid->Ki * error);
+		if (ITerm
+	}
+}
+
+void PIDSetTunings(double Kp, double Ki, double Kd) 
+{
+	
+}
